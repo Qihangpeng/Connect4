@@ -1,0 +1,14 @@
+<html>
+    <title>Game ID:<%=game.id%></title>
+    <head>Game:<%=game.id%></head>
+    <body onload = replay("<%=game.steps%>","<%=game.players[0]%>","<%=game.players[1]%>","<%=game.winner%>",<%=game.surrender%>)>
+        <div>Replay: <%=game.players[0]%> Vs. <%=game.players[1]%></div>
+        <canvas id = "replay" width = "490" height = "420" style="border:1px solid;"></canvas>
+        
+        <button type = button style='position:absolute; top:500px; left:300px;' id = "nextStep">Next</button>
+        <button type = button style='position:absolute; top:500px; left:140px;' id = "prevStep">Prev</button>
+        <button type = button style='position:absolute; top:30px; left:380px;' onclick = back()>Return</button>
+        <div id = 'color' style='position:absolute; top:200px; left:550px'></div>
+    </body>
+    <script src = '../Script.js'></script>
+</html>

@@ -1,0 +1,18 @@
+<html>
+    <title>Matches</title>
+    <head>Ongoing Matches</head>
+    <body>
+    <br>
+        <% list.forEach(game=>{ %>
+        <br>
+            <%=game.players[0]%> Vs. <%=game.players[1]%>
+            <form method = 'POST' action ='/games/<%=game.id%>'>
+                <input name ='name' value = '<%=user%>' hidden></input>
+                <input name = 'id' value = '<%=game.id%>' hidden></input>
+                <input type = submit value = 'Watch'></input>
+            </form>
+        <%})%>
+        <button type = button style= 'position:absolute; top:30px; left:380px;' onclick = back()>Return</button>
+    </body>
+    <script src = '../Script.js'></script>
+</html>

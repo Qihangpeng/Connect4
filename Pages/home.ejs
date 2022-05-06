@@ -1,0 +1,123 @@
+<html>
+    <title>Home Page</title>
+    <head></head>
+    <body onload=loadSocket('<%=user.name%>')>
+        <div style='position:absolute; top:10px; left:440px;'>
+            <form action='/games' method = 'POST' style='position: absolute; top:2px;left:-127px'>
+                <input name = user value = "<%=user.name%>" hidden></input>
+                <input type =submit value = 'Ongoing Matches'></input>
+            </form>
+            <button type = 'button' onclick = addFriend('<%=user.name%>')>Add a Friend</button>
+        
+            <button type = 'button' onclick = removeFriend('<%=user.name%>')>Remove Friend</button>
+        
+        
+            <% if(user.private === true){ %>
+            <button type = 'button' onclick = privacy('<%=user.name%>')>Set Public</button>
+            <%}else{%>
+            <button type = 'button' onclick = privacy('<%=user.name%>')>Set Private</button>
+            <%}%>
+        
+            <button type = 'button' onclick = logout('<%=user.name%>')>Log out</button>
+        </div>
+        
+        
+        
+        
+        <div id = 'profile' style='height:200px; width: 300px; position:absolute; top:40px; left:30px;'>
+        <l>Username: <%= user.name%></l><br>
+        <l>Game Played: <%= user.gamePlayed%></l><br>
+        <l>Win Rate: <%= Number((user.win*100/(user.gamePlayed)).toString().match(/^\d+(?:\.\d{0,2})?/))%>%</l>
+        
+        </div>
+        
+        
+        
+        <l style= 'position:absolute; top:120px; left:25px;'>History:</l>
+        
+        <div style='height:200px; width: 500px; position:absolute; top:145px; left:20px; border:1px solid'>
+            <% user.matchHistory.forEach(match=>{ %>
+                <a href = "/users/<%=match.players[0]%>"><%=match.players[0]%></a> Vs. <a href = '/users/<%=match.players[1]%>'><%=match.players[1]%></a> ---- winner: <%=match.winner%>
+            <a href = "/history/<%=match.id%>" style='position:absolute; right:5px;'>Watch</a><br><br>
+            <%})%>
+        </div>
+        
+        
+        
+        <l style='position:absolute; top:355px; left:25px;'>Ongoing Matches:</l>
+
+        <div style='overflow:scroll; height:180px; width: 500px; position:absolute; top:385px; left:20px; border:1px solid'>
+            <% user.matches.forEach(match=>{%>
+                <%=match.players[0]%> Vs. <%=match.players[1]%>
+                <form style='position:absolute; right:10px;' action="/games/<%=match.id%>"  method="POST" target = "_blank">
+                    <input hidden id = 'currentUser' name = 'currentUser' value = '<%=user.name%>'></input>
+                    <input hidden id = 'gameID' name ='gameID' value = '<%=match.id%>'></input>
+                    <input type = 'submit' value = 'GO'></input>
+                </form>
+                <br><br>
+            <%})%>
+        </div>
+        
+        
+        
+        
+        <div style='position:absolute; top:50px; left:585px;'>
+            <input type = 'textbox' id = searchString style='width:150px;'></input>
+            <button type = 'button' id = searchButton onclick = search(false)>Search</button>
+        </div>
+        
+        
+        <div style = 'overflow:scroll; position:absolute; top:170px; left:560px; height:500px; width:240px; border:1px solid;'>
+            <% user.friendList.forEach(friend=>{ %>
+                
+                <form action='/friends/<%=friend.name%>' method='POST'>
+                    <input name = 'user' value = '<%=user.name%>' hidden></input>
+                    <input type = submit value = '<%=friend.name%>' style='border:none; outline: none; color:blue; background-color: white; position:relative; font-size:15px; top:3px; left:3px'></input>
+                
+                <l style='position: absolute; right:10px;'>
+                
+                <% if (friend.stat == 0){ %>
+                    online
+                <%}else{%>
+                    offline
+                <%}%>
+                </l>
+                </form>
+                
+        <%})%>
+        </div>
+        
+        <l style='position:absolute; top:575px; left:25px;'>Requests:</l>
+        <div style = 'overflow:scroll; position:absolute; top:600px; left:20px; width:500px; height:120px; border:1px solid;'>
+            <br>
+            <% user.requests.forEach(req=>{ %>
+                <% if(req[1] === 'add'){ %>
+                    <%=req[0]%> wants to add you as friend!
+                <%}else{%>
+                    <%=req[0]%> is inviting you to a <%=req[2]%> game!
+                <%}%>
+                <l style='position:absolute; right:20px;'>
+                    <button id = 'y' onclick = "handler('<%=req%>','<%=user.name%>',id)">Accept</button>
+                    <button id = 'n' onclick = "handler('<%=req%>','<%=user.name%>',id)">Reject</button>
+                </l>
+                <br><br>
+            <%})%>
+        </div>
+        
+        
+        
+        <div style='position:absolute; top:90px; left:615px;'>
+            <select id = 'opponent'>
+                <option value = 'random'>--------Random------</option>
+                <% user.friendList.forEach(friend=>{%>
+                    <option value = '<%=friend.name%>'><%=friend.name%></option>
+                <%})%>
+            </select>
+            <button id = 'start' onclick = startGame('<%=user.name%>')>Start</button>
+        </div>
+    </body>
+    
+    <script src = Script.js></script>
+    <script src="/socket.io/socket.io.js"></script>
+
+</html>

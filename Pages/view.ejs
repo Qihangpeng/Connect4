@@ -1,0 +1,26 @@
+<html>
+    <title><%=user.name%></title>
+    <body>
+        <div style='position:absolute; top:40px; left:40px; border:1px solid; height: 120px;width:300px;'>
+            <br>
+            <l style='position:relative; left:60px;'>Username: <%= user.name%></l><br>
+            <l style='position:relative; left:60px;'>Game Played: <%= user.gamePlayed%></l><br>
+            <l style='position:relative; left:60px;'>Win Rate: <%= Number((user.win*100/(user.gamePlayed)).toString().match(/^\d+(?:\.\d{0,2})?/))%>%</l>
+        </div>
+        <div style='position:absolute; top:180px;'> History:</div>
+        <div id = hisroty style ='position:absolute; top:200px; border:1px solid; width: 500px; height:300px; overflow:scroll'>
+            <% if(user.matchHistory.length == 0){ %>
+                This user has not played a single game!
+            <%}else{%>
+                <% for(i=user.matchHistory.length-1;i>=0;i--){ %>
+                    <%if(user.matchHistory[i].gameType == 0){ %>
+                        <a href = '/users/<%=user.matchHistory[i].players[0]%>'><%=user.matchHistory[i].players[0]%></a> Vs. <a href = '/users/<%=user.matchHistory[i].players[1]%>'><%=user.matchHistory[i].players[1]%></a>  ----- Winner: <%=user.matchHistory[i].winner%>
+                        <a href= '/history/<%=user.matchHistory[i].id%>'>Watch</a>
+                    <%}%>
+                <%}%>
+            <%}%>
+        </div>
+        <button type = button style= 'position:absolute; top:30px; left:380px;' onclick = back()>Return</button>
+    </body>
+    <script src = '../Script.js'></script>
+</html>
